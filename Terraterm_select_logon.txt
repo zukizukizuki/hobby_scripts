@@ -1,7 +1,7 @@
 ;===============================================
 ; Filename    : ssh_listbox-01.ttl
 ; Description : SSH Auto login - host selection listbox
-; Author      : 山岡　修平
+; Author      : ずっきぃ
 ; Created     : 2021/01/12
 ; modified    : 
 ;===============================================
