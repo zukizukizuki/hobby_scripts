@@ -1,0 +1,73 @@
+;===============================================
+; Description : Terraterm select logon
+; Author      : ずっきぃ
+; Created     : 2021/01/12
+; modified    : 
+;===============================================
+
+;; 接続先定義数
+DEFINE_NUM = 3
+
+;; 接続先種類定義
+strdim TYPE_NAME DEFINE_NUM
+TYPE_NAME[0] = 'サーバ1'
+TYPE_NAME[1] = 'サーバ2'
+TYPE_NAME[2] = 'サーバ3'
+
+;; サーバアドレス定義
+strdim HOST_ADDRESS DEFINE_NUM
+HOST_ADDRESS[0] = 'xxx.xxx.xxx.xxx'
+HOST_ADDRESS[1] = 'xxx.xxx.xxx.xxx'
+HOST_ADDRESS[2] = 'xxx.xxx.xxx.xxx'
+
+;; ユーザ名定義
+strdim USER_ID DEFINE_NUM
+USER_ID[0] = 'user1'
+USER_ID[1] = 'user2'
+USER_ID[2] = 'user3'
+
+;; パスワード定義
+strdim PASSWD DEFINE_NUM
+PASSWD[0] = ''
+PASSWD[1] = ''
+PASSWD[2] = ''
+
+;; rootパスワード定義
+strdim RPASSWD DEFINE_NUM
+RPASSWD[0] = ''
+RPASSWD[1] = ''
+RPASSWD[2] = ''
+
+;; 選択接続先インデクス
+SELECTED_INDEX = -1
+;===============================================
+
+;; 接続先種類選択
+listbox '接続先を選択して下さい' '接続先選択' TYPE_NAME
+if 0 <= result then
+    SELECTED_INDEX = result
+    ;;messagebox TYPE_NAME[SELECTED_INDEX] '選択された接続先'
+else
+    end
+endif
+ 
+;; 接続用コマンド組立て
+COMMAND = HOST_ADDRESS[SELECTED_INDEX]
+strconcat COMMAND ':22 /ssh /2'
+strconcat COMMAND ' /auth=password'
+strconcat COMMAND ' /user='
+strconcat COMMAND USER_ID[SELECTED_INDEX]
+strconcat COMMAND ' /passwd='
+strconcat COMMAND PASSWD[SELECTED_INDEX]
+;; 接続コマンド実行
+connect COMMAND
+
+wait "login"
+sendln "uname -a"
+sendln "whoami"
+sendln "su -"
+wait "パスワード"
+sendln RPASSWD[SELECTED_INDEX]
+
+;; マクロ終了
+end
