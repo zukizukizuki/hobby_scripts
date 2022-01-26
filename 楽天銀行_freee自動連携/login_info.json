@@ -1,0 +1,12 @@
+{
+    "freee": {
+      "id": "",
+      "pass": "",
+      "url": "https://accounts.secure.freee.co.jp/login/accounting?a=false&e=0&o=true"
+    },
+    "bank_rakuten": {
+      "id": "",
+      "pass": "",
+      "url": "https://fes.rakuten-bank.co.jp/MS/main/RbS?CurrentPageID=START&&COMMAND=LOGIN"
+    }
+  }
