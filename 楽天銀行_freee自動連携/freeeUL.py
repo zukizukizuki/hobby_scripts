@@ -66,7 +66,7 @@ last_month_last_day = this_month_first_day - timedelta(days=1)
 last_month_first_day = last_month_last_day.replace(day=1)
 from1 = str(last_month_first_day).replace('-','')[:8]
 to1 = str(last_month_last_day).replace('-','')[:8]
-browser.find_element_by_id("ofx").send_keys('C:\\Users\\asaka\\Documents\\work\\税務\\' + from1 + '_'+ to1 + '.csv');
+browser.find_element_by_id("ofx").send_keys('C:\\' + from1 + '_'+ to1 + '.csv');
 
 #次へをクリック
 c = browser.find_element_by_name("commit")
