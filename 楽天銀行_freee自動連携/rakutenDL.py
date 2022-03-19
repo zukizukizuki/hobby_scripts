@@ -10,6 +10,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from webdriver_manager.chrome import ChromeDriverManager
 
 # 設定ファイルからログイン情報を取得
 login_info = json.load(open("login_info.json", "r", encoding="utf-8"))
@@ -25,7 +26,7 @@ USER = login_info[site_name]["id"]
 PASS = login_info[site_name]["pass"]
 
 # chromeを起動する
-browser = webdriver.Chrome()
+browser = webdriver.Chrome(ChromeDriverManager().install())
 
 # ログイン画面取得
 browser.get(url_login)
@@ -46,6 +47,10 @@ button.click()
 WebDriverWait(browser, 10).until(
     ec.presence_of_element_located((By.ID, "footer-copyright"))
 )
+
+#残高取得
+#RakutenMoney = browser.find_elements_by_xpath('/html/body/div[1]/div/form[1]/div[4]/div[1]/div[1]/div/ul/li[1]/a/span[2]')
+RakutenMoney = browser.find_elements_by_xpath('/html/body/div[1]/div/form[1]/div[4]/div[1]/div[1]/div/ul/li[1]/a/span[3]')
 
 # 入出金明細画面へ遷移
 browser.find_element_by_link_text("入出金明細").click()
@@ -91,9 +96,17 @@ last_month_last_day = this_month_first_day - timedelta(days=1)
 last_month_first_day = last_month_last_day.replace(day=1)
 from1 = str(last_month_first_day).replace('-','')[:8]
 to1 = str(last_month_last_day).replace('-','')[:8]
-#ダウンロードフォルダ、移動先フォルダを指定
-shutil.move('ダウンロードフォルダ\\RB-torihikimeisai.csv' , '移動先フォルダ\\' + from1 + '_'+ to1 + '.csv')
+shutil.move('C:\\Users\\asaka\\Downloads\\RB-torihikimeisai.csv' , 'C:\\Users\\asaka\\Documents\\work\\税務\\' + from1 + '_'+ to1 + '.csv')
 
+#print("----------------------")
+#print("")
+#print("")
+#print("")
+#print(RakutenMoney)
+#print("")
+#print("")
+#print("")
+#print("----------------------")
 #----------------Jqueryを使ったパターン(直接入力出来ないため使用不可)----------------
 #id = "datepicker_from"
 
