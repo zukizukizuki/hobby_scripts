@@ -1,0 +1,1 @@
+VMWARE上のVMに対してsnapshotの取得・削除を行う
