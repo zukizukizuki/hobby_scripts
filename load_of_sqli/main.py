@@ -1,7 +1,7 @@
 import requests
 import urllib.parse
 
-url = 'https://los.rubiya.kr/chall/orc_60e5b360f95c1f9688e4f3a86c5dd494.php'
+url = 'https://los.rubiya.kr/chall/"クッキーを入力".php'
 cookie = ''
 
 #英数字記号をcandidatesに入れる
