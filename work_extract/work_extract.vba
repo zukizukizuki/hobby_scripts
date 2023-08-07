@@ -1,4 +1,4 @@
-Sub ボタン4_Click()
+Sub ボタン1_Click()
 
     '高速化
     Application.Calculation = xlManual
