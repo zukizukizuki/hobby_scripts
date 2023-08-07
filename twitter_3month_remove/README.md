@@ -1,0 +1,1 @@
+Twitterで3ヵ月アクティブでないユーザーをremoveするscript

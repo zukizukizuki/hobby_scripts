@@ -1,1 +1,1 @@
-Terraterm_select_logon
+Terratermにログインを簡略化するscript

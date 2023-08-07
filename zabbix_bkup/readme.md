@@ -1,1 +1,1 @@
-zabbix_bkup
+zabbixのbkupを取得する
