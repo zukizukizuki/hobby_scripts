@@ -1,0 +1,5 @@
+# postgres backupコマンド
+sudo docker compose exec db pg_dumpall --clean --username postgres > /tmp/20231013_backup.sql
+
+# postgres restoreコマンド
+sudo cat /tmp/20231013_backup.sql | docker-compose exec -T db psql --username postgres
