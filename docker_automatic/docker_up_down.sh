@@ -13,6 +13,7 @@
 
 # 変数指定
 ServerIP=$2
+package=$3
 
 # 第2引数がない場合終了
 if [ -n "$ServerIP" ] ; then
@@ -33,6 +34,8 @@ if [ $1 = "first_set" ] ; then
     # 環境変数設定(初回のみ)
     echo "HTTP_PROXY = \"\"" >> .env
     # フォルダ作成とコピー(初回のみ)
+    tar xvfJ ${package}
+    cd application-packages
     cd setup
     sudo mkdir /usr/local/share/nginx
     sudo cp -p ./nginx/nginx.conf /usr/local/share/nginx/
@@ -49,7 +52,7 @@ if [ $1 = "first_set" ] ; then
 elif [ $1 = "up" ] ; then
     # ソース配置
     cd
-    tar xvfJ application-packages-20230929160000.tar.xz
+    tar xvfJ ${package}
     cd application-packages
 
     # DB起動＆初期構築処理
