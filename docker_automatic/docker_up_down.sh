@@ -13,6 +13,7 @@
 
 # 変数指定
 ServerIP=$2
+package=$3
 
 # 第2引数がない場合終了
 if [ -n "$ServerIP" ] ; then
@@ -22,23 +23,34 @@ else
     exit
 fi
 
+# 第3引数がない場合終了
+if [ -n "$package" ] ; then
+    echo -e "\e----------start----------"
+else
+    echo -e "\e[31m第2引数にIPアドレスを設定してください。"
+    exit
+fi
+
+
 ###############
 # 初回設定手順
 ###############
 if [ $1 = "first_set" ] ; then
 
+    tar xvfJ ${package}
     # hosts設定、DNSの代わり(初回のみ)
-    echo "127.0.0.1 XYZ.co.jp" >> /etc/hosts
+    echo "127.0.0.1 ycu.ibsen.cross-sync.co.jp" >> /etc/hosts
 
     # 環境変数設定(初回のみ)
-    echo "HTTP_PROXY = \"\"" >> .env
+    echo "HTTP_PROXY = \"\"" >> ibsen-application-packages/.env
     # フォルダ作成とコピー(初回のみ)
+    cd ibsen-application-packages
     cd setup
     sudo mkdir /usr/local/share/nginx
-    sudo cp -p ./nginx/nginx.conf /usr/local/share/nginx/
-    sudo cp -rpT ./nginx/ssl /usr/local/share/nginx/ssl
+    sudo cp -fp ./nginx/nginx.conf /usr/local/share/nginx/nginx.conf
+    sudo cp -frpT ./nginx/ssl /usr/local/share/nginx/ssl
     sudo mkdir /usr/local/share/coredns
-    sudo cp -rpT ./coredns  /usr/local/share/coredns/
+    sudo cp -frpT ./coredns  /usr/local/share/coredns/
     cd ..
 
     echo -e "\e[31m初回設定完了"
@@ -48,20 +60,19 @@ if [ $1 = "first_set" ] ; then
 ####################
 elif [ $1 = "up" ] ; then
     # ソース配置
-    cd
-    tar xvfJ application-packages-20230929160000.tar.xz
-    cd application-packages
+    # tar xvfJ ${package}
+    cd ibsen-application-packages
 
     # DB起動＆初期構築処理
     sudo docker compose up db -d
     cd backend/db-create/
-    sudo docker image build --no-cache --build-arg ARG_WORKDIR=$PWD --build-arg ARG_PROXY=""  -t db-create:0.1.0 .
+    sudo docker image build --no-cache --build-arg ARG_WORKDIR=$PWD --build-arg ARG_PROXY=""  -t ibsen/db-create:0.1.0 .
 
     # コンテナ内に入らず起動だけする
-    sudo docker run --tty --detach --name db-create_0.1.0 --net network --volume .:$PWD ibsen/db-create:0.1.0 /bin/ash
-    sudo docker exec db-create_0.1.0 npm install
-    sudo docker exec db-create_0.1.0 npm run db:migrate:latest
-    sudo docker exec -it db-create_0.1.0 npm run db:seed:run:test
+    sudo docker run --tty --detach --name ibsen_db-create_0.1.0 --net ibsen-network --volume .:$PWD ibsen/db-create:0.1.0 /bin/ash
+    sudo docker exec ibsen_db-create_0.1.0 npm install
+    sudo docker exec ibsen_db-create_0.1.0 npm run db:migrate:latest
+    sudo docker exec -it ibsen_db-create_0.1.0 npm run db:seed:run:test
 
     cd ../..
 
@@ -90,8 +101,7 @@ elif [ $1 = "up" ] ; then
 ###############
 elif [ $1 = "down" ] ; then
 
-    cd
-    cd application-packages
+    cd ibsen-application-packages
 
     # コンテナ→イメージの順で強制削除
     sudo docker rm -f $(docker ps -aq)
@@ -105,7 +115,7 @@ elif [ $1 = "down" ] ; then
     docker ps -a
 
     # DIR削除
-    sudo rm -r /home/ubuntu/application-packages
+    sudo rm -r ibsen-application-packages
 
     echo -e "\e[31m停止完了"
 else
