@@ -63,6 +63,9 @@ elif [ $1 = "up" ] ; then
     # tar xvfJ ${package}
     cd ibsen-application-packages
 
+    # DBのIPを修正
+    sed -i -e "s/host: '172.20.152.63',/host: \'${ServerIP}\',/g" ./backend/db-create/knexfile.ts
+
     # DB起動＆初期構築処理
     sudo docker compose up db -d
     cd backend/db-create/
@@ -90,6 +93,7 @@ elif [ $1 = "up" ] ; then
     sudo docker compose up video-linker -d
     sudo docker compose up webrtc -d
     sudo docker compose up monitor-receiver -d
+    sudo docker compose up monitor-analyzer -d
     sudo docker compose up video-receiver -d
     sudo docker compose up api-server -d
     sudo docker compose up nginx -d
