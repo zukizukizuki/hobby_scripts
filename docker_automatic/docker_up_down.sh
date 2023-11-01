@@ -13,7 +13,6 @@
 
 # 変数指定
 ServerIP=$2
-package=$3
 
 # 第2引数がない場合終了
 if [ -n "$ServerIP" ] ; then
@@ -22,15 +21,6 @@ else
     echo -e "\e[31m第2引数にIPアドレスを設定してください。"
     exit
 fi
-
-# 第3引数がない場合終了
-if [ -n "$package" ] ; then
-    echo -e "\e----------start----------"
-else
-    echo -e "\e[31m第2引数にIPアドレスを設定してください。"
-    exit
-fi
-
 
 ###############
 # 初回設定手順
