@@ -27,14 +27,34 @@ fi
 ###############
 if [ $1 = "first_set" ] ; then
 
-    tar xvfJ ${package}
+    # tar xvfJ ${package}
     # hosts設定、DNSの代わり(初回のみ)
     echo "127.0.0.1 ycu.ibsen.cross-sync.co.jp" >> /etc/hosts
 
     # 環境変数設定(初回のみ)
     echo "HTTP_PROXY = \"\"" >> ibsen-application-packages/.env
-    # フォルダ作成とコピー(初回のみ)
+
+    # 移動
     cd ibsen-application-packages
+
+    # DBのIPを修正
+    sed -i -e "s/host: '172.20.152.63',/host: \'${ServerIP}\',/g" ./backend/db-create/knexfile.ts
+
+    #nginxのIPを修正
+    sed -i -e "s/resolver 172.20.152.63;/resolver ${ServerIP};/g" ./setup/nginx/nginx.conf
+    # sed -i -e "s/proxy_pass http://172.20.152.63:8000/\$1\$is_args\$args;/proxy_pass http://${ServerIP}:8000/\$1\$is_args\$args;/g" ./setup/nginx/nginx.conf
+    sed -i -e "s/proxy_pass http:\/\/172.20.152.63:8000/proxy_pass http:\/\/${ServerIP}:8000/g" ./setup/nginx/nginx.conf
+
+    # nginxのwebrtcの修正
+    #vimでやるのでいったんスルー
+
+    # 動画受理処理default.json書き換え
+    sed -i -e "s/\"exec_args_in2\": \"rtsp:\/\/external-video-linker:9554\/\",/\"exec_args_in2\": \"rtsp:\/\/${ServerIP}:9554\/\",/g" ~/ibsen-application-packages/backend/video-receiver/default.json
+
+    # WebRTC処理default.json書き換え
+    sed -i -e "s/\"rtsp_url\": \"rtsp:\/\/172.20.152.63\",/\"rtsp_url\": \"rtsp:\/\/${ServerIP}\",/g" ~/ibsen-application-packages/backend/webrtc/default.json
+
+    # フォルダ作成とコピー(初回のみ)
     cd setup
     sudo mkdir /usr/local/share/nginx
     sudo cp -fp ./nginx/nginx.conf /usr/local/share/nginx/nginx.conf
@@ -52,9 +72,6 @@ elif [ $1 = "up" ] ; then
     # ソース配置
     # tar xvfJ ${package}
     cd ibsen-application-packages
-
-    # DBのIPを修正
-    sed -i -e "s/host: '172.20.152.63',/host: \'${ServerIP}\',/g" ./backend/db-create/knexfile.ts
 
     # DB起動＆初期構築処理
     sudo docker compose up db -d
