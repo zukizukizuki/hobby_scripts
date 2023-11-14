@@ -115,8 +115,8 @@ elif [ $1 = "down" ] ; then
     cd ibsen-application-packages
 
     # コンテナ→イメージの順で強制削除
-    sudo docker rm -f $(docker ps -aq)
-    sudo docker rmi -f $(docker images -q)
+    sudo docker rm -f $(sudo docker ps -aq)
+    sudo docker rmi -f $(sudo docker images -q)
 
     #オブジェクトの削除
     sudo docker system prune -a
