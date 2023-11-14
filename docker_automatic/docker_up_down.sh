@@ -75,12 +75,13 @@ elif [ $1 = "up" ] ; then
     sudo docker compose build webrtc --no-cache
 
     # Docker起動
+    sudo docker compose up api-server -d
+    sudo docker compose up monitor-receiver -d
+    sudo docker compose up video-receiver -d
+    sudo docker compose up monitor-analyzer -d
     sudo docker compose up video-analyzer -d
     sudo docker compose up video-linker -d
     sudo docker compose up webrtc -d
-    sudo docker compose up monitor-receiver -d
-    sudo docker compose up video-receiver -d
-    sudo docker compose up api-server -d
     sudo docker compose up nginx -d
 
     echo -e "\e[31m起動完了"
